@@ -1,6 +1,7 @@
 import { LoginController } from './login-controller'
 import { Authentication, AuthenticationDto } from '../../../../domain/usecase/authentication'
 import { HttpRequest } from '../../../protocols/http'
+import { unauthorized } from '../../../helpers/http/http-helper'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -48,6 +49,6 @@ describe('Login Controller', () => {
     const { sut, authenticationStub } = makesut()
     jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(null)
     const httpResponse = await sut.handle(makeFakeRequest())
-    expect(httpResponse).toBeFalsy()
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
