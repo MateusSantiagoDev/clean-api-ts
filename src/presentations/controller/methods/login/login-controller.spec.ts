@@ -12,7 +12,7 @@ const makeFakeRequest = (): HttpRequest => ({
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth (authentication: AuthenticationDto): Promise<string> {
-      return new Promise(resolve => resolve(null))
+      return new Promise(resolve => resolve('any_token'))
     }
   }
   return new AuthenticationStub()
@@ -42,5 +42,12 @@ describe('Login Controller', () => {
       email: 'any_email@mail.com',
       password: 'any_password'
     })
+  })
+
+  test('Deve retornar 401 se forem fornecidas credenciais inválidas', async () => {
+    const { sut, authenticationStub } = makesut()
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(null)
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toBeFalsy()
   })
 })
