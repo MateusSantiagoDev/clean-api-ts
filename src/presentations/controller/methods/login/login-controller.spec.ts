@@ -1,8 +1,9 @@
 import { LoginController } from './login-controller'
 import { Authentication, AuthenticationDto } from '../../../../domain/usecase/authentication'
 import { HttpRequest } from '../../../protocols/http'
-import { serverError, unauthorized, ok } from '../../../helpers/http/http-helper'
+import { serverError, unauthorized, ok, badRequest } from '../../../helpers/http/http-helper'
 import { Validation } from '../../../protocols/validation'
+import { MissingParamError } from '../../../errors'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -85,5 +86,12 @@ describe('Login Controller', () => {
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  test('Deve retornar 400 se a validação retornar um erro', async () => {
+    const { sut, validationStub } = makesut()
+    jest.spyOn<any, string>(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_fild'))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_fild')))
   })
 })
