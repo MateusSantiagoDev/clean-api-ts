@@ -2,6 +2,8 @@ import { SignUpController } from './signup-controller'
 import { AddAccount, AccountDto} from '../../../../domain/usecase/add-account'
 import { AccountModel } from '../../../../domain/model/account'
 import { HttpRequest } from '../login/login-controller-protocols'
+import { serverError } from '../../../helpers/http/http-helper'
+import { ServerError } from '../../../errors'
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
@@ -53,5 +55,13 @@ describe('Signup Controller', () => {
       email: 'any_email@mail.com',
       password: 'any_password'
     })
+  })
+
+  // excessão
+  test('Deve retornar 500 se AddAccount falhar', async () => {
+    const { sut, addAccountStub } = makeSut()
+    jest.spyOn(addAccountStub, 'add').mockImplementation(() => { throw new Error() })
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new ServerError(null)))
   })
 })
