@@ -2,8 +2,8 @@ import { SignUpController } from './signup-controller'
 import { AddAccount, AccountDto} from '../../../../domain/usecase/add-account'
 import { AccountModel } from '../../../../domain/model/account'
 import { HttpRequest } from '../login/login-controller-protocols'
-import { serverError } from '../../../helpers/http/http-helper'
-import { ServerError } from '../../../errors'
+import { forbidden, serverError } from '../../../helpers/http/http-helper'
+import { EmailinUseError, ServerError } from '../../../errors'
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
@@ -63,5 +63,12 @@ describe('Signup Controller', () => {
     jest.spyOn(addAccountStub, 'add').mockImplementation(() => { throw new Error() })
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new ServerError(null)))
+  })
+
+  test('Deve retornar 403 se AddAccount retornar nulo', async () => {
+    const {sut, addAccountStub } = makeSut()
+    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(forbidden(new EmailinUseError()))
   })
 })
