@@ -5,6 +5,7 @@ import { HttpRequest } from '../login/login-controller-protocols'
 import { forbidden, ok, serverError } from '../../../helpers/http/http-helper'
 import { EmailinUseError, ServerError } from '../../../errors'
 import { Authentication, AuthenticationDto} from '../../../../domain/usecase/authentication'
+import { Validation } from '../../../protocols/validation'
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
@@ -21,6 +22,15 @@ const makeFakeRequest = (): HttpRequest => ({
     confirmPassword: 'any_password'
   }
 })
+
+const makeValidation = (): Validation => {
+  class ValidationStub implements Validation {
+    validate (input: any): Error {
+      return null
+    }
+  }
+  return new ValidationStub()
+}
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
@@ -44,16 +54,19 @@ interface sutTypes {
   sut: SignUpController
   addAccountStub: AddAccount
   authenticationStub: Authentication
+  validationStub: Validation
 }
 
 const makeSut = (): sutTypes => {
+  const validationStub = makeValidation()
   const authenticationStub = makeAuthentication()
   const addAccountStub = makeAccount()
-  const sut = new SignUpController(addAccountStub, authenticationStub)
+  const sut = new SignUpController(addAccountStub, authenticationStub, validationStub)
   return {
     sut,
     addAccountStub,
-    authenticationStub
+    authenticationStub,
+    validationStub
   }
 }
 
@@ -99,5 +112,14 @@ describe('Signup Controller', () => {
     jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  // integração
+  test('Deve chamar o Validation com valores corretos', async () => {
+    const { sut, validationStub } = makeSut()
+    const valideteSpy = jest.spyOn(validationStub, 'validate')
+    const httpResponse = makeFakeRequest()
+    await sut.handle(httpResponse)
+    expect(valideteSpy).toHaveBeenCalledWith(httpResponse.body)
   })
 })
