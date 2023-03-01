@@ -1,9 +1,5 @@
+import { Hasher, AccountDto, AddAccountRepository, AccountModel, LoadAccountByEmailRepository } from './db-add-account-protocols'
 import { DbAccount } from './db-add-account'
-import { Hasher } from '../../criptography/hasher'
-import { AccountDto } from '../../../../domain/usecase/add-account'
-import { AddAccountRepository } from '../../db/account/add-account-repository'
-import { AccountModel } from '../../../../domain/model/account'
-import { LoadAccountByEmailRepository } from '../../db/account/load-account-by-email-repository'
 
 const makeFakeAccountDto = (): AccountDto => ({
   name: 'any_name',
