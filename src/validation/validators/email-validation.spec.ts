@@ -42,7 +42,7 @@ describe('Email Validation', () => {
   })
 
   // excessão
-  test('Deve falhar se EmailValidator falhar', () => {
+  test('Deve falhar se o EmailValidator falhar', () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn<any, string>(emailValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
     expect(sut.validate).toThrow()
