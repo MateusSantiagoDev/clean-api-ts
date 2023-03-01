@@ -1,10 +1,17 @@
+import { InvalidParamError } from '../../presentations/errors'
 import { Validation } from '../../presentations/protocols'
 import { EmailValidator } from '../protocols/email-validator'
 
+// class que vai validar o email
 export class EmailValidation implements Validation {
-  constructor (private readonly fieldName: string, private readonly emailValidator: EmailValidator) {}
+  constructor (
+    private readonly fieldName: string,
+    private readonly emailValidator: EmailValidator) {}
+    
   validate (input: any): Error {
-    this.emailValidator.isValid(input[this.fieldName])
-    return null
+    const isValid = this.emailValidator.isValid(input[this.fieldName])
+    if (!isValid) {
+      return new InvalidParamError(this.fieldName)
+    }
   }
 }
