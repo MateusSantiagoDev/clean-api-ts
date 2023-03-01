@@ -118,4 +118,12 @@ describe('DbAuthentication Usecase', () => {
     await sut.auth(makeFakeAuthenticationDto())
     expect(encryptSpy).toHaveBeenCalledWith('any_id')
   })
+
+  // excessão
+  test('Deve falhar se o Encrypter falhar', async () => {
+    const { sut, encrypterstub } = makeSut()
+    jest.spyOn(encrypterstub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const promise = sut.auth(makeFakeAuthenticationDto())
+    await expect(promise).rejects.toThrow()
+  })
 })
