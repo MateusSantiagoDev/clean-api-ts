@@ -1,13 +1,30 @@
 import { DbAccount } from './db-add-account'
 import { Hasher } from '../../criptography/hasher'
 import { AccountDto } from '../../../../domain/usecase/add-account'
+import { AddAccountRepository } from '../../db/account/add-account-repository'
+import { AccountModel } from '../../../../domain/model/account'
 
 const makeFakeAccountDto = (): AccountDto => ({
   name: 'any_name',
-  email: 'any_email',
+  email: 'any_email@mail.com',
   password: 'hashed_password'
 })
 
+const makeFakeAccount = (): AccountModel => ({
+  id: 'any_id',
+  name: 'any_name',
+  email: 'any_email@mail.com',
+  password: 'any_password'
+})
+
+const makeAddAccountRepository = (): AddAccountRepository => {
+  class AddAccountRepositoryStub implements AddAccountRepository {
+    async add (account: AccountDto): Promise<AccountModel> {
+      return new Promise(resolve => resolve(makeFakeAccount()))
+    }
+  }
+  return new AddAccountRepositoryStub()
+}
 const makeHasher = (): Hasher => {
   class HasherStub implements Hasher {
     async hash (value: string): Promise<string> {
@@ -20,14 +37,17 @@ const makeHasher = (): Hasher => {
 interface sutTypes {
   sut: DbAccount
   hasherStub: Hasher
+  addAccountRepositoryStub: AddAccountRepository
 }
 
 const makeSut = (): sutTypes => {
+  const addAccountRepositoryStub = makeAddAccountRepository()
   const hasherStub = makeHasher()
-  const sut = new DbAccount(hasherStub)
+  const sut = new DbAccount(hasherStub, addAccountRepositoryStub)
   return {
     sut,
-    hasherStub
+    hasherStub,
+    addAccountRepositoryStub
   }
 }
 
@@ -41,10 +61,22 @@ describe('DbAccount Usecase', () => {
   })
 
   // excessão
-  test('Deve falhar se Hasher falhar', async () => {
+  test('Deve falhar se o Hasher falhar', async () => {
     const { sut, hasherStub } = makeSut()
     jest.spyOn(hasherStub, 'hash').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const promise = sut.add(makeFakeAccountDto())
     await expect(promise).rejects.toThrow()
+  })
+
+  // integração
+  test('Deve chamar AddAccountRepository com valores corretos', async () => {
+    const { sut, addAccountRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
+    await sut.add(makeFakeAccountDto())
+    expect(addSpy).toHaveBeenCalledWith({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'hashed_password'
+    })
   })
 })
