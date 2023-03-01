@@ -115,4 +115,10 @@ describe('DbAccount Usecase', () => {
     const response = await sut.add(makeFakeAccountDto())
     expect(response).toBeNull()
   })
+
+  test('Deve retornar uma conta com sucesso', async () => {
+    const { sut } = makeSut()
+    const response = await sut.add(makeFakeAccountDto())
+    expect(response).toEqual(makeFakeAccount())
+  })
 })
