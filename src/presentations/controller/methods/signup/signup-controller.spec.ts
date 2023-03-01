@@ -1,11 +1,8 @@
-import { SignUpController } from './signup-controller'
-import { AddAccount, AccountDto} from '../../../../domain/usecase/add-account'
-import { AccountModel } from '../../../../domain/model/account'
-import { HttpRequest } from '../login/login-controller-protocols'
+import { AddAccount, AccountDto, AccountModel, HttpRequest, Authentication, AuthenticationDto, Validation } from './signup-controller-protocols'
 import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
 import { EmailinUseError, MissingParamError, ServerError } from '../../../errors'
-import { Authentication, AuthenticationDto} from '../../../../domain/usecase/authentication'
-import { Validation } from '../../../protocols/validation'
+import { SignUpController } from './signup-controller'
+
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
