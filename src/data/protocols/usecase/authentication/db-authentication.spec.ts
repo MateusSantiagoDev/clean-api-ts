@@ -3,6 +3,7 @@ import { LoadAccountByEmailRepository } from '../../db/account/load-account-by-e
 import { AuthenticationDto } from '../../../../domain/usecase/authentication'
 import { AccountModel } from '../../../../domain/model/account'
 import { HashCompare } from '../../criptography/hash-compare'
+import { Encrypter } from '../../criptography/encrypter'
 
 const makeFakeAccountModel = (): AccountModel => ({
   id: 'any_id',
@@ -15,6 +16,15 @@ const makeFakeAuthenticationDto = (): AuthenticationDto => ({
   email: 'valid_email@mail.com',
   password: 'any_password' 
 })
+
+const makeEncrypter = (): Encrypter => {
+  class Encrypterstub implements Encrypter {
+    async encrypt (value: string): Promise<string> {
+      return new Promise(resolve => resolve('any_token')) 
+    }
+  }
+  return new Encrypterstub()
+}
 
 const makeHashCompare = (): HashCompare => {
   class HashCompareStub implements HashCompare {
@@ -38,16 +48,19 @@ interface sutTypes {
   sut: DbAuthentication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   hashCompareStub: HashCompare
+  encrypterstub: Encrypter
 }
 
 const makeSut = (): sutTypes => {
+  const encrypterstub = makeEncrypter()
   const hashCompareStub = makeHashCompare()
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
-  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashCompareStub)
+  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashCompareStub, encrypterstub)
   return {
     sut,
     loadAccountByEmailRepositoryStub,
-    hashCompareStub
+    hashCompareStub,
+    encrypterstub
   }
 }
 
@@ -96,5 +109,13 @@ describe('DbAuthentication Usecase', () => {
     jest.spyOn(hashCompareStub, 'compare').mockReturnValueOnce(new Promise(resolve => resolve(false)))
     const accessToken = await sut.auth(makeFakeAuthenticationDto())
     expect(accessToken).toBeNull()
+  })
+
+  // integração
+  test('Deve chamar o Encrypter com id correto', async () => {
+    const { sut, encrypterstub } = makeSut()
+    const encryptSpy = jest.spyOn(encrypterstub, 'encrypt')
+    await sut.auth(makeFakeAuthenticationDto())
+    expect(encryptSpy).toHaveBeenCalledWith('any_id')
   })
 })
