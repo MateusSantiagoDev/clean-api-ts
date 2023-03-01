@@ -76,7 +76,7 @@ describe('DbAuthentication Usecase', () => {
   })
 
   //integração
-  test('Deve chamar HashComparer com valores corretos', async () => {
+  test('Deve chamar o HashComparer com valores corretos', async () => {
     const { sut, hashCompareStub } = makeSut()
     const compareSpy = jest.spyOn(hashCompareStub, 'compare')
     await sut.auth(makeFakeAuthenticationDto())
@@ -84,10 +84,17 @@ describe('DbAuthentication Usecase', () => {
   })
 
   // excessão
-  test('Deve falhar se HashComparer falhar', async () => {
+  test('Deve falhar se o HashComparer falhar', async () => {
     const { sut, hashCompareStub } = makeSut()
     jest.spyOn(hashCompareStub, 'compare').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const promise = sut.auth(makeFakeAuthenticationDto())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Deve retornar null se o HashCompare retornar false', async () => {
+    const { sut, hashCompareStub } = makeSut()
+    jest.spyOn(hashCompareStub, 'compare').mockReturnValueOnce(new Promise(resolve => resolve(false)))
+    const accessToken = await sut.auth(makeFakeAuthenticationDto())
+    expect(accessToken).toBeNull()
   })
 })
