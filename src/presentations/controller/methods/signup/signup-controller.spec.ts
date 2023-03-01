@@ -2,8 +2,8 @@ import { SignUpController } from './signup-controller'
 import { AddAccount, AccountDto} from '../../../../domain/usecase/add-account'
 import { AccountModel } from '../../../../domain/model/account'
 import { HttpRequest } from '../login/login-controller-protocols'
-import { forbidden, ok, serverError } from '../../../helpers/http/http-helper'
-import { EmailinUseError, ServerError } from '../../../errors'
+import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/http-helper'
+import { EmailinUseError, MissingParamError, ServerError } from '../../../errors'
 import { Authentication, AuthenticationDto} from '../../../../domain/usecase/authentication'
 import { Validation } from '../../../protocols/validation'
 
@@ -121,5 +121,12 @@ describe('Signup Controller', () => {
     const httpResponse = makeFakeRequest()
     await sut.handle(httpResponse)
     expect(valideteSpy).toHaveBeenCalledWith(httpResponse.body)
+  })
+
+  test('Deve retornar 400 se a validação retornar um erro', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn<any, string>(validationStub, 'validate').mockResolvedValueOnce(new MissingParamError('any_field'))     
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
 })
