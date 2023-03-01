@@ -1,6 +1,7 @@
 import { Validation } from '../../presentations/protocols'
 import { InvalidParamError } from '../../presentations/errors'
 
+// compara dois campos
 export class CompareFieldsValidation implements Validation {
   constructor (
     private readonly fieldName: string, 
