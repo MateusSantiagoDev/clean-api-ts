@@ -129,4 +129,10 @@ describe('Signup Controller', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
   })
+
+  test('Deve retornar 200 se dados válidos forem fornecidos', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeRequest())    
+    expect(httpResponse).toEqual(ok({ accessToken: 'any_token'}))
+  })
 })
