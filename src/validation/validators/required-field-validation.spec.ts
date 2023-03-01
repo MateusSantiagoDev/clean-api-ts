@@ -10,4 +10,10 @@ describe('RequiredField Validation', () => {
     const error = sut.validate({ name: 'invalid_param' })
     expect(error).toEqual(new MissingParamError('field'))
   })
+
+  test('Não deve retornar se a validação for bem-sucedida', () => {
+    const sut = makeSut()
+    const error = sut.validate({ field: 'any_param' })
+    expect(error).toBeFalsy()
+  })
 })
