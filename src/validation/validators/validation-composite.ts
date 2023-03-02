@@ -1,5 +1,6 @@
 import { Validation } from '../../presentations/protocols/validation'
 
+// class que recebe um array de validations
 export class ValidationComposite implements Validation {
   constructor (private readonly validations: Validation[]) {}
 
