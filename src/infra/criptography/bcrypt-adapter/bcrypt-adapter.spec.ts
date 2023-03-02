@@ -29,4 +29,11 @@ describe('Bcrypt Adapter', () => {
     const promise = sut.hash('any_password')
     await expect(promise).rejects.toThrow()
   })
+
+  // sucesso
+  test('Deve retornar um hash no caso de sucesso', async () => {
+    const sut = makeSut()
+    const hashed = await sut.hash('valid_password')
+    expect(hashed).toEqual('hash')
+  })
 })
