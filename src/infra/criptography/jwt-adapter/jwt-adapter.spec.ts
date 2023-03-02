@@ -27,4 +27,11 @@ describe('JWT Adapter', () => {
     const promise = sut.encrypt('any_id')
     await expect(promise).rejects.toThrow()
   })
+
+  // sucesso
+  test('Deve retornar um token no sucesso do Sign', async () => {
+    const sut = makeSut()
+    const accessToken = await sut.encrypt('any_id')
+    expect(accessToken).toEqual('any_token')
+  })
 })
