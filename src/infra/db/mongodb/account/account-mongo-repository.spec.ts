@@ -2,9 +2,9 @@ import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account-mongo-repository'
 import { Collection } from 'mongodb'
 
-let accountCollection = Collection.prototype
-
 describe('Account Mongo Repository', () => {
+  
+  let accountCollection = Collection.prototype
 
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
