@@ -79,4 +79,11 @@ describe('LogController Decorator', () => {
     await sut.handle(makeFakeRequest())
     expect(logErrorSpy).toHaveBeenCalledWith('any_stack')
   })
+
+  // sucesso
+  test('Deve retornar o mesmo resultado do controlador', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(ok(makeFakeAccount()))
+  })
 })
