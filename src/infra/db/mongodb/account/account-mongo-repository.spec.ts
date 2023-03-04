@@ -68,7 +68,7 @@ describe('Account Mongo Repository', () => {
       name: 'any_name',
       email: 'any_email@mail.com',
       password: 'any_password'
-    })
+    })    
     // garantindo que usuário não tem token
     const fakeAccount = await accountCollection.findOne({ _id: result.insertedId })
     expect(fakeAccount.accessToken).toBeFalsy()
