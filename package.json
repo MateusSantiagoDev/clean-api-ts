@@ -7,7 +7,7 @@
     "start": "sucrase-node src/main/server.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
-    "test:integration": "npm test -- --watch -c jest-integration-config.test.js",
+    "test:integration": "npm test -- --watch -c jest-integration-config.js",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage"
