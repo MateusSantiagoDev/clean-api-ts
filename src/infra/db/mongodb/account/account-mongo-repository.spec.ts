@@ -24,7 +24,7 @@ describe('Account Mongo Repository', () => {
     return new AccountMongoRepository()
   }
 
-  // criação do usuário
+  // integração
   test('Deve retornar a conta e adicionar sucesso', async () => {
     const sut = makeSut()
     const accountMock = await sut.add({
@@ -39,7 +39,7 @@ describe('Account Mongo Repository', () => {
     expect(account.password).toBe('any_password')
   })
 
-  // sucesso na integração com o loadByEmail
+  // integração
   test('Deve retornar usuário com o loadByEmail criado com sucesso', async () => {
     const sut = makeSut()
     await accountCollection.insertOne({
@@ -59,5 +59,22 @@ describe('Account Mongo Repository', () => {
     const sut = makeSut()
     const account = await sut.loadByEmail('any_email@mail.com')
     expect(account).toBeFalsy()
+  })
+
+  // integração
+  test('Deve atualizar o accessToken no sucesso do updateAccessToken', async () => {
+    const sut = makeSut()
+    const result = await accountCollection.insertOne({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password'
+    })
+    // garantindo que usuário não tem token
+    const fakeAccount = await accountCollection.findOne({ _id: result.insertedId })
+    expect(fakeAccount.accessToken).toBeFalsy()
+    await sut.updateAccessToken(fakeAccount.id, 'any_token')
+    const account = await accountCollection.findOne({ id: fakeAccount.id })
+    expect(account).toBeTruthy()
+    expect(account.accessToken).toBe('any_token')
   })
 })
