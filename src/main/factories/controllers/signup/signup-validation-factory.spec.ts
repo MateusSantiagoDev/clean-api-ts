@@ -17,7 +17,7 @@ const makeEmailValidator = (): EmailValidator => {
 
 describe('SignupValidator Factory', () => {
   // integração
-  test('Deve chamar o validationComposite com todas as validações', async () => {
+  test('Deve chamar o validationComposite com todas as validações', () => {
     MakeSignupValidation()
 
     // garantindo que o composite não vai deixar
