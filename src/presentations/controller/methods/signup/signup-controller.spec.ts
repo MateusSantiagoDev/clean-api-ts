@@ -50,20 +50,20 @@ const makeAccount = (): AddAccount => {
 interface sutTypes {
   sut: SignUpController
   addAccountStub: AddAccount
-  authenticationStub: Authentication
   validationStub: Validation
+  authenticationStub: Authentication
 }
 
 const makeSut = (): sutTypes => {
   const validationStub = makeValidation()
   const authenticationStub = makeAuthentication()
   const addAccountStub = makeAccount()
-  const sut = new SignUpController(addAccountStub, authenticationStub, validationStub)
+  const sut = new SignUpController(addAccountStub, validationStub, authenticationStub)
   return {
     sut,
     addAccountStub,
-    authenticationStub,
-    validationStub
+    validationStub,
+    authenticationStub
   }
 }
 

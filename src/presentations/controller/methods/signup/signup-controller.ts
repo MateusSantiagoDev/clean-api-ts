@@ -4,7 +4,11 @@ import { EmailinUseError } from '../../../errors'
 
 
 export class SignUpController implements Controller {
-  constructor (private readonly addAccount: AddAccount, private readonly authentication: Authentication, private readonly validation: Validation) {}
+  constructor (
+    private readonly addAccount: AddAccount, 
+    private readonly validation: Validation,
+    private readonly authentication: Authentication, 
+  ) {}
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {  
     try {
 

@@ -6,13 +6,11 @@ export default (app: Express): void => {
   const router = Router()
   app.use('/api', router)
 
-  // a partir do diretorio atual vai ser feito build em todos os 
+  // a partir do diretorio ../routes vai ser feito build em todos os 
   // arquivos que não incluirem .test.
-  readdirSync(join(__dirname, '.../routes')).map(async file => {
+  readdirSync(join(__dirname, '../routes')).map(async file => {
     if (!file.includes('.test.')) {
-      (await import(`.../routes/${file}`)).default(router)
+      (await import(`../routes/${file}`)).default(router)
     }
   })
-
-
 }

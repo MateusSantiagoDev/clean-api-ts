@@ -29,19 +29,19 @@ const makeAuthentication = (): Authentication => {
 }
 
 interface sutTypes {
-  authenticationStub: Authentication
   sut: LoginController
   validationStub: Validation
+  authenticationStub: Authentication
 } 
 
 const makesut = (): sutTypes => {
   const validationStub = makeValidation()
   const authenticationStub = makeAuthentication()
-  const sut = new LoginController(authenticationStub, validationStub)
+  const sut = new LoginController(validationStub, authenticationStub)
   return {
     sut,
-    authenticationStub,
-    validationStub
+    validationStub,
+    authenticationStub
   }
 }
 
