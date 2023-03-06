@@ -8,3 +8,4 @@ MongoHelper.connect(env.mongoUrl).then(async () => {
   app.listen(env.port, () => console.log(`Servidor rodando em http://localhost:${env.port}`))
 
 })
+  .catch(err => console.error(err))

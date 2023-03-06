@@ -1,3 +1,4 @@
+import env from '../../../../main/config/env'
 import { LogMongoRepository } from './log-mongo-repository'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { Collection } from 'mongodb'
@@ -7,7 +8,7 @@ describe('Log Mongo Repository', () => {
   let erroCollection: Collection
 
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL)
+    await MongoHelper.connect(env.mongoUrl)
   })
 
   beforeEach(async () => {
