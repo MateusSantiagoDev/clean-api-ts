@@ -57,5 +57,16 @@ describe('Login Router', () => {
 
         .expect(200)
     })
+
+    test('Deve retornar 401 na rota login', async () => {
+      await request(app)
+        .post('/api/login')
+        .send({
+          email: 'mateus_santiago2.3@outlook.com',
+          password: '1234'
+        })
+        
+        .expect(401)
+    })
   })
 })
