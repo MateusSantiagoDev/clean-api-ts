@@ -4,7 +4,13 @@
       "module": "commonjs",
       "target": "es2019",
       "esModuleInterop": true, 
-      "allowJs": true, 
-      "sourceMap": true
+      "allowJs": true
     },
+    "include": [ // só os arquivos dentro de src vão estar na dist
+      "src"
+    ],
+    "exclude": [ // a dist vai ignorar os arquivos de spec e test
+      "**/*.spec.ts",
+      "**/*.test.ts"
+    ]
   }
