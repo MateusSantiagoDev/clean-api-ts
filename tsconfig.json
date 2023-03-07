@@ -4,7 +4,7 @@
       "module": "commonjs",
       "target": "es2019",
       "esModuleInterop": true, 
-      "allowJs": true
+      "allowJs": true,
     },
     "include": [ // só os arquivos dentro de src vão estar na dist
       "src"
