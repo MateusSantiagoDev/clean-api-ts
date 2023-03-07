@@ -1,7 +1,7 @@
 import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from '../login/login-controller-protocols'
 import { Validation } from '../../../protocols/validation'
-import { badRequest, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, noContent, serverError } from '../../../helpers/http/http-helper'
 import { AddSurvey } from '../../../../domain/usecase/add-survey'
 
 export class AddSurveyController implements Controller {
@@ -23,8 +23,9 @@ export class AddSurveyController implements Controller {
         question,
         answers
       })
+
+      return noContent() 
   
-      return new Promise(resolve => resolve(null))
     } catch (error) {
       return serverError(error)
     }  
