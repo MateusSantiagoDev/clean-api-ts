@@ -12,26 +12,29 @@ const makeSut = (): JwtAdapter => {
 }
 
 describe('JWT Adapter', () => {
-  // integração
-  test('Deve chamar o Sign com os valores corretos', async () => {
-    const sut = makeSut()
-    const signSpy = jest.spyOn(jwt, 'sign')
-    await sut.encrypt('any_id')
-    expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, 'secret')
-  })
+  describe('sign()', () => {
+    // integração
+    test('Deve chamar o Sign com os valores corretos', async () => {
+      const sut = makeSut()
+      const signSpy = jest.spyOn(jwt, 'sign')
+      await sut.encrypt('any_id')
+      expect(signSpy).toHaveBeenCalledWith({ id: 'any_id' }, 'secret')
+    })
 
-  // excessão
-  test('Deve falhar se o Sign falhar', async () => {
-    const sut = makeSut()
-    jest.spyOn<any, string>(jwt, 'sign').mockReturnValueOnce(new Promise((resolve,reject) => reject(new Error())))
-    const promise = sut.encrypt('any_id')
-    await expect(promise).rejects.toThrow()
-  })
+    // excessão
+    test('Deve falhar se o Sign falhar', async () => {
+      const sut = makeSut()
+      jest.spyOn<any, string>(jwt, 'sign').mockReturnValueOnce(new Promise((resolve,reject) => reject(new Error())))
+      const promise = sut.encrypt('any_id')
+      await expect(promise).rejects.toThrow()
+    })
 
-  // sucesso
-  test('Deve retornar um token no sucesso do Sign', async () => {
-    const sut = makeSut()
-    const accessToken = await sut.encrypt('any_id')
-    expect(accessToken).toEqual('any_token')
+    // sucesso
+    test('Deve retornar um token no sucesso do Sign', async () => {
+      const sut = makeSut()
+      const accessToken = await sut.encrypt('any_id')
+      expect(accessToken).toEqual('any_token')
+    })
   })
+ 
 })
