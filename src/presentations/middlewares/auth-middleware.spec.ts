@@ -32,9 +32,9 @@ interface sutTypes {
   loadAccountByTokenStub: LoadAccountByToken
 }
 
-const makeSut = (): sutTypes => {
+const makeSut = (role?: string): sutTypes => {
   const loadAccountByTokenStub = makeLoadAccountByToken()
-  const sut = new AuthMiddleware(loadAccountByTokenStub) 
+  const sut = new AuthMiddleware(loadAccountByTokenStub, role) 
   return {
     sut,
     loadAccountByTokenStub
@@ -45,10 +45,11 @@ describe('Auth Middleware', () => {
 
   // integração - se existir o token vai chamar o ADM dono do token
   test('deve chamar LoadAccountByToken com accessToken correto', async () => {
-    const { sut, loadAccountByTokenStub } = makeSut()
+    const role = 'any_role'
+    const { sut, loadAccountByTokenStub } = makeSut(role)
     const loadSpy = jest.spyOn(loadAccountByTokenStub, 'load')
     await sut.handle(makeFakeRequest())
-    expect(loadSpy).toHaveBeenCalledWith('any_token')
+    expect(loadSpy).toHaveBeenCalledWith('any_token', role)
   })
 
   test('deve retornar 403 se nenhum x-access-token existir nos headers', async () => {
