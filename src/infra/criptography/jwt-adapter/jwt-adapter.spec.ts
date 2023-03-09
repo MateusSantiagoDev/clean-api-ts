@@ -29,7 +29,9 @@ describe('JWT Adapter', () => {
     // excessão
     test('Deve falhar se o Sign falhar', async () => {
       const sut = makeSut()
-      jest.spyOn<any, string>(jwt, 'sign').mockReturnValueOnce(new Promise((resolve,reject) => reject(new Error())))
+      jest.spyOn(jwt, 'sign').mockImplementationOnce(() => {
+        throw new Error()
+      })
       const promise = sut.encrypt('any_id')
       await expect(promise).rejects.toThrow()
     })
@@ -57,6 +59,16 @@ describe('JWT Adapter', () => {
       const sut = makeSut()
       const value = await sut.decrypt('any_token')
       expect(value).toBe('any_value')
+    })
+
+    // excessão
+    test('Deve falhar se o verify falhar', async () => {
+      const sut = makeSut()
+      jest.spyOn(jwt, 'verify').mockImplementationOnce(() => {
+        throw new Error()
+      })
+      const promise = sut.decrypt('any_token')
+      await expect(promise).rejects.toThrow()
     })
   })
  
