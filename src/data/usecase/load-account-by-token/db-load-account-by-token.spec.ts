@@ -63,7 +63,7 @@ describe('DbLoadAccountByToken Usecase', () => {
     expect(account).toBeNull()
   })
 
-  // nos testes acima ja foi verificado se po token existe
+  // nos testes acima ja foi verificado se o token existe
   // agora vou usar o token para localizar o usuário dono do token
 
   // integração
