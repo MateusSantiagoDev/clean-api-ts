@@ -51,6 +51,13 @@ describe('JWT Adapter', () => {
       await sut.decrypt('any_token')
       expect(verifySpy).toHaveBeenCalledWith('any_token', 'secret')
     })
+
+    // operação reversa do encrypt
+    test('deve retornar o valor se o verify funcionar com sucesso', async () => {
+      const sut = makeSut()
+      const value = await sut.decrypt('any_token')
+      expect(value).toBe('any_value')
+    })
   })
  
 })
