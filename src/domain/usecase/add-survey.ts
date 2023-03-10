@@ -1,6 +1,7 @@
 export interface AddSurveyDto {
   question: string
   answers: SurveyAnswers[]
+  date: Date
 }
 
 export interface SurveyAnswers {

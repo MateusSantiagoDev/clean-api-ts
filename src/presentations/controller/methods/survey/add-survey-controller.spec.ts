@@ -1,3 +1,4 @@
+import MockDate from 'mockdate'
 import { AddSurveyController } from './add-survey-controller'
 import { Validation, HttpRequest, AddSurvey, AddSurveyDto } from './add-survey-controller-protocols'
 import { badRequest, noContent, serverError } from '../../../helpers/http/http-helper'
@@ -10,7 +11,8 @@ const makeFakeRequest = (): HttpRequest => ({
       answer: 'any_answer'
     }, {
       answer: 'any_answer',
-    }]
+    }],
+    date: new Date()
   }
 })
 
@@ -50,6 +52,15 @@ const makeSut = (): sutTypes => {
 }
 
 describe('AddSyrvey Controller', () => {
+
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  beforeAll(() => {
+    MockDate.reset()
+  })
+
   // integração
   test('deve chamar o Validation com os valores corretos', async () => {
     const { sut, validationStub } = makeSut()
