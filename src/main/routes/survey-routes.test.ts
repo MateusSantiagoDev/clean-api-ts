@@ -2,7 +2,7 @@ import env from '../config/env'
 import app from '../config/app'
 import request from 'supertest'
 import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
-import { Collection, ObjectId } from 'mongodb'
+import { Collection } from 'mongodb'
 import { sign } from 'jsonwebtoken'
 
 describe('Survey Router', () => {
@@ -71,6 +71,6 @@ describe('Survey Router', () => {
         })                                
         
         .expect(204)
-    })
+    }) 
   })
 })
