@@ -50,7 +50,6 @@ describe('Survey Router', () => {
         role: 'admin' // permissão de administrator
       })
       const result = res.insertedId
-      console.log(result)
       // gerando um token para o usuário a partir do id
       const accessToken = sign({ result }, env.jwtSecret)
       // atualizando o usuário com o accesstoken
