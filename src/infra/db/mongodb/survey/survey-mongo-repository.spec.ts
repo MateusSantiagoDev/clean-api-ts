@@ -8,7 +8,6 @@ const makeSut = (): SurveyMongoRepository => {
   return new SurveyMongoRepository()
 }
 
-
 describe('Survey Mongo Repository', () => {
 
   let surveyCollection: Collection
