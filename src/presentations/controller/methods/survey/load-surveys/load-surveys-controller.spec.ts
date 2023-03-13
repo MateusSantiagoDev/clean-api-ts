@@ -1,5 +1,5 @@
 import MockDate from 'mockdate'
-import { ok, serverError } from '../../../../helpers/http/http-helper'
+import { noContent, ok, serverError } from '../../../../helpers/http/http-helper'
 import { LoadSurvey, SurveyModel } from './load-surveys-controller-protocols'
 import { LoadSurveysController } from './load-surveys-controller'
 
@@ -66,6 +66,14 @@ describe('LoadSurveys Controller', () => {
     const loadSpy = jest.spyOn(loadSurveysStub, 'load')
     await sut.handle({})
     expect(loadSpy).toHaveBeenCalled() // somente espero q ele seja chamado
+  })
+
+  // se não houver conteúdo retorna 204
+  test('deve retornar 204 se LoadSurvey retornar empyt', async () => {
+    const { sut, loadSurveysStub } = makeSut()
+    jest.spyOn(loadSurveysStub, 'load').mockReturnValueOnce(new Promise(resolve => resolve([])))
+    const httpRequest = await sut.handle({})
+    expect(httpRequest).toEqual(noContent())
   })
 
   // sucesso
