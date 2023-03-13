@@ -79,5 +79,33 @@ describe('Survey Router', () => {
         .get('/api/surveys')
         .expect(403)
     })
+
+    test('deve retornar 200 nas pesquisas com acceddToken válido', async () => {     
+      // integração
+      const res = await accountCollection.insertOne({
+        name: 'Mateus',
+        email: 'mateus@teste.com.br',
+        password: '1234'
+      })
+      const result = res.insertedId   
+      const accessToken = sign({ result }, env.jwtSecret)     
+      await accountCollection.updateOne({
+        _id: result       
+      }, { $set: { accessToken } })
+      await surveyCollection.insertMany([{
+        question: 'any_question',
+        answers: [{
+          image: 'any_image',
+          answer: 'any_answer',
+        }, {
+          answer: 'any_answer',
+        }],
+        date: new Date()      
+      }])
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)        
+        .expect(200)
+    }) 
   })
 })
