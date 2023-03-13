@@ -71,9 +71,15 @@ describe('Survey Mongo Repository', () => {
       }])
       const sut = makeSut()
       const surveys = await sut.loadAll()       
-      expect(surveys).toHaveLength(2) // inserindo dois objetos no teste
+      expect(surveys.length).toBe(2) // inserindo dois objetos no teste
       expect(surveys[0].question).toBe('any_question')
       expect(surveys[1].question).toBe('other_question')
     })
+
+    test('deve carregar a lista vazia', async () => {
+      const sut = makeSut()
+      const surveys = await sut.loadAll()
+      expect(surveys.length).toBe(0)
+    }) 
   })
 })
